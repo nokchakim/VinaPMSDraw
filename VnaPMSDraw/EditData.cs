@@ -15,6 +15,10 @@ namespace VnaPMSDraw
         public string Float;
         public int Zindex;
         public string FontColor;
+        public string UniqueTag;
+        public Point Postion;
+        public int height;
+        public int weight;
 
         public string GetData()
         {
@@ -30,6 +34,17 @@ namespace VnaPMSDraw
 
     public class DigiImageData
     {
+
+        public string Tag;
+        public string basepath;
+        public short[] value = new short[4];
+        public string[] path = new string[4];
+        public string UniqueTag;
+        public Point Postion;
+        public int height;
+        public int weight;
+        
+
         public string GetData()
         {
             string temp = "";
@@ -43,6 +58,10 @@ namespace VnaPMSDraw
 
     public class StaticImageData
     {
+        public Point Postion;
+        public int height;
+        public int weight;
+
         public string GetData()
         {
             string temp = "";

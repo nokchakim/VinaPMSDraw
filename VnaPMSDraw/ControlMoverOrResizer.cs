@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using System.Drawing;
 using VnaPMSDraw;
 
 namespace ControlManager
@@ -118,6 +119,7 @@ namespace ControlManager
 
         private static void StartMovingOrResizing(Control control, MouseEventArgs e)
         {
+            control.Focus();
             if (_moving || _resizing)
             {
                 return;
@@ -225,8 +227,23 @@ namespace ControlManager
                 if("Digital" == control.Name)
                 {
                     DigitalImageConfig diform = new DigitalImageConfig();
-                    
-                    if(diform.ShowDialog() == DialogResult.OK)
+
+                    //data 리스트에 구별자를 넣고  tag가 있다
+                    //컨트롤 구별자랑 foreach로 다 찾아가면서 
+                    foreach(DigiImageData data in digiImageData)
+                    {
+                        if(control.Tag.ToString() == data.UniqueTag)
+                        {
+
+                        }
+                    }
+                    //일치하는 class를 넣어준다
+                    //
+                    int datacount = 0;
+
+                    diform.SetDialog(digiImageData[datacount]);
+
+                    if (diform.ShowDialog() == DialogResult.OK)
                     {
                         DigiImageData setimage = diform.ReturnValue();
                         digiImageData.Add(setimage);
@@ -240,9 +257,29 @@ namespace ControlManager
             else if ( typeName =="TextBox")
             {
                 ALTextConfig alform = new ALTextConfig();
+                //받아와서 Set하기
+                alform.SetDialog((TextBox)control);
+
+
                 if (alform.ShowDialog() == DialogResult.OK)
                 {
                     AnaTextData settext = alform.ReturnValue();
+                    control.ForeColor = alform.ReturnColor();
+                    control.Text = settext.Tag;
+
+                    int size = 12;
+                    //small 8 medium 12 largr 24
+                    if ("Small" == settext.FontSize) size = 12;
+                    else if ("Medium" == settext.FontSize) size = 12;
+                    else if ("Large" == settext.FontSize) size = 24;
+
+                    FontStyle fstyle = FontStyle.Regular;
+                    if ("Bold" == settext.FontWeight) fstyle = FontStyle.Bold;
+
+                    control.Font = new Font(control.Font.FontFamily, size, fstyle);
+
+                    control.Refresh();
+
                     altextData.Add(settext);
                 }
             }

@@ -168,6 +168,7 @@ namespace VnaPMSDraw
             pb.Left = ClickMousePoint.X;
             pb.Top = ClickMousePoint.Y;
 
+            //key down event             
             ControlMoverOrResizer.Init(pb);
             this.Controls.Add(pb);
             this.Refresh();
@@ -177,7 +178,7 @@ namespace VnaPMSDraw
         {
             TextBox tb = new TextBox();           
             tb.Name = "analogue";
-            tb.Text = "아날로그 텍스트";                  
+            tb.Text = "Tag Text";                  
             tb.Left = ClickMousePoint.X;
             tb.Top = ClickMousePoint.Y;
             tb.ForeColor = Color.White;
@@ -290,6 +291,11 @@ namespace VnaPMSDraw
             sticdata.SetData();
             staImageData.Add(sticdata);
 
+        }
+
+        private void PictureBox_MouseOver(object sender, MouseEventArgs e)
+        {            
+            this.Focus();
         }
 
 

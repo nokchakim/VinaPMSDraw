@@ -45,7 +45,8 @@
             this.exportHTMLToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1845, 28);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(1614, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -54,13 +55,13 @@
             this.processImageToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.loadImageToolStripMenuItem});
             this.processImageToolStripMenuItem.Name = "processImageToolStripMenuItem";
-            this.processImageToolStripMenuItem.Size = new System.Drawing.Size(120, 24);
+            this.processImageToolStripMenuItem.Size = new System.Drawing.Size(96, 20);
             this.processImageToolStripMenuItem.Text = "Process Image";
             // 
             // loadImageToolStripMenuItem
             // 
             this.loadImageToolStripMenuItem.Name = "loadImageToolStripMenuItem";
-            this.loadImageToolStripMenuItem.Size = new System.Drawing.Size(172, 26);
+            this.loadImageToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
             this.loadImageToolStripMenuItem.Text = "Load Image";
             this.loadImageToolStripMenuItem.Click += new System.EventHandler(this.loadImageToolStripMenuItem_Click);
             // 
@@ -70,32 +71,34 @@
             this.eXPORTToolStripMenuItem,
             this.iMPORTToolStripMenuItem});
             this.exportHTMLToolStripMenuItem.Name = "exportHTMLToolStripMenuItem";
-            this.exportHTMLToolStripMenuItem.Size = new System.Drawing.Size(63, 24);
+            this.exportHTMLToolStripMenuItem.Size = new System.Drawing.Size(51, 20);
             this.exportHTMLToolStripMenuItem.Text = "HTML";
             // 
             // eXPORTToolStripMenuItem
             // 
             this.eXPORTToolStripMenuItem.Name = "eXPORTToolStripMenuItem";
-            this.eXPORTToolStripMenuItem.Size = new System.Drawing.Size(148, 26);
+            this.eXPORTToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.eXPORTToolStripMenuItem.Text = "EXPORT";
             this.eXPORTToolStripMenuItem.Click += new System.EventHandler(this.eXPORTToolStripMenuItem_Click);
             // 
             // iMPORTToolStripMenuItem
             // 
             this.iMPORTToolStripMenuItem.Name = "iMPORTToolStripMenuItem";
-            this.iMPORTToolStripMenuItem.Size = new System.Drawing.Size(148, 26);
+            this.iMPORTToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
             this.iMPORTToolStripMenuItem.Text = "IMPORT";
             this.iMPORTToolStripMenuItem.Click += new System.EventHandler(this.iMPORTToolStripMenuItem_Click);
             // 
             // BackForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.ClientSize = new System.Drawing.Size(1845, 783);
+            this.ClientSize = new System.Drawing.Size(1614, 626);
             this.Controls.Add(this.menuStrip1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MainMenuStrip = this.menuStrip1;
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "BackForm";
             this.Text = "만들기";
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.MouseRigltClick);

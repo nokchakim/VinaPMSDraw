@@ -22,7 +22,7 @@ namespace VnaPMSDraw
 
             //컨트롤 이니셜라이즈
             combo_FontSIze.Items.Add("Large");
-            combo_FontSIze.Items.Add("Midiume");
+            combo_FontSIze.Items.Add("Midium");
             combo_FontSIze.Items.Add("Small");
             combo_FontSIze.SelectedIndex = 1;            
 
@@ -71,8 +71,7 @@ namespace VnaPMSDraw
             {
                 lab_Color.BackColor = cd.Color;
                 //
-            }
-            else {  };
+            }          
         }
         
         public Color HexToColor(string code)
@@ -80,13 +79,27 @@ namespace VnaPMSDraw
             return  Color.FromArgb(Convert.ToInt32(code, 16));
         }
 
+        public Color ReturnColor()
+        {
+            return lab_Color.BackColor;
+        }
+
         public AnaTextData ReturnValue()
         {
-            AnaTextData temp = new AnaTextData();           
-
+            AnaTextData temp = new AnaTextData();
+            temp.Tag = string.Format("{0}", text_TAG.Text);
             temp.FontColor = string.Format("{0:X2}{1:X2}{2:X2}", lab_Color.BackColor.R, lab_Color.BackColor.G, lab_Color.BackColor.B);
+            temp.FontSize = string.Format(combo_FontSIze.SelectedItem.ToString());
+            temp.FontWeight = string.Format(combo_FontBold.SelectedItem.ToString());
+            temp.Zindex = combo_Zindex.SelectedIndex;
 
             return temp;
+        }
+
+        public void SetDialog(TextBox text)
+        {
+            text_TAG.Text = text.Text;
+            lab_Color.BackColor = text.ForeColor;            
         }
     }
 }
