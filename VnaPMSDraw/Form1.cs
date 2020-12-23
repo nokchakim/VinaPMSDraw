@@ -85,19 +85,6 @@ namespace VnaPMSDraw
         {
             image = new Bitmap(path);
         }
-
-        private void btn_AnalogueText_Click(object sender, EventArgs e)
-        {
-            ALTextConfig alform = new ALTextConfig();
-            if(alform.ShowDialog() == DialogResult.OK)
-            {               
-                AnaTextData settext = alform.ReturnValue();
-            }
-
-            //AlTextData 의 구조체로 반환하면 list에 넣어주기
-            
-
-        }
         
         public string FilePath()
         {
@@ -167,6 +154,9 @@ namespace VnaPMSDraw
             pb.SizeMode = PictureBoxSizeMode.StretchImage;
             pb.Left = ClickMousePoint.X;
             pb.Top = ClickMousePoint.Y;
+            pb.BackColor = Color.Transparent;
+
+            pb.Tag = DateTime.Now.ToString("yyyyMMddHHmmssfff");
 
             //key down event             
             ControlMoverOrResizer.Init(pb);
@@ -183,6 +173,8 @@ namespace VnaPMSDraw
             tb.Top = ClickMousePoint.Y;
             tb.ForeColor = Color.White;
             tb.BackColor = Color.Black;
+//tb.BackColor = Color.FromArgb(0, 0, 0, 0); 텍스트박스는 투명해지지 않는다!
+            tb.Tag = DateTime.Now.ToString("yyyyMMddHHmmssfff");
 
             ControlMoverOrResizer.Init(tb);
             this.Controls.Add(tb);
@@ -197,7 +189,9 @@ namespace VnaPMSDraw
             pb.Image = new Bitmap(strtemp);
             pb.SizeMode = PictureBoxSizeMode.StretchImage;
             pb.Left = ClickMousePoint.X;
-            pb.Top = ClickMousePoint.Y;            
+            pb.Top = ClickMousePoint.Y;
+            pb.Tag = DateTime.Now.ToString("yyyyMMddHHmmssfff");
+            pb.BackColor = Color.Transparent;
 
             ControlMoverOrResizer.Init(pb);
             this.Controls.Add(pb);
@@ -250,8 +244,8 @@ namespace VnaPMSDraw
 
               string strSavename = this.Text;
 
-            controlsInfoStr = ControlMoverOrResizer.GetSizeAndPositionOfControlsToString(this);
-
+          //  controlsInfoStr = ControlMoverOrResizer.GetControlFormat(this);
+            
             foreach(AnaTextData textdata in altextData)
             {
                 textdata.GetData();
@@ -276,20 +270,13 @@ namespace VnaPMSDraw
         {
             if (!string.IsNullOrWhiteSpace(controlsInfoStr))
             {
-                ControlMoverOrResizer.SetSizeAndPositionOfControlsFromString(this, controlsInfoStr);
+                ControlMoverOrResizer.SaveControlFormat(this, controlsInfoStr);
             }
 
-            AnaTextData anadata = new AnaTextData();
-            anadata.SetData();
-            altextData.Add(anadata);
-
-            DigiImageData digidata = new DigiImageData();
-            digidata.SetData();
-            digiImageData.Add(digidata);
-
-            StaticImageData sticdata = new StaticImageData();
-            sticdata.SetData();
-            staImageData.Add(sticdata);
+            //json에서 구분별로 data를 가져와서 넣어줌
+            //1. analogue text json불러와서 -> textbox 생성 and statictextdata에 add
+            //1. static image json불러와서 -> picture 생성 and statictextdata에 add
+            //1. digital image json불러와서 -> picture 생성 and statictextdata에 add
 
         }
 
@@ -298,6 +285,30 @@ namespace VnaPMSDraw
             this.Focus();
         }
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == (Keys.Alt | Keys.Menu))
+            {
+                if (!this.menuStrip1.Visible)
+                {
+                    this.menuStrip1.Visible = true;
+                    var OnMenuKey = menuStrip1.GetType().GetMethod("OnMenuKey",
+                        System.Reflection.BindingFlags.NonPublic |
+                        System.Reflection.BindingFlags.Instance);
+                    OnMenuKey.Invoke(this.menuStrip1, null);
+                }
+                else
+                {
+                    this.menuStrip1.Visible = false;
+                }
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+        private void menuStrip1_MenuDeactivate(object sender, EventArgs e)
+        {
+            this.BeginInvoke(new Action(() => { this.menuStrip1.Visible = false; }));
+        }
 
     }
 }

@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
-using System.Drawing;
 using VnaPMSDraw;
 
 namespace ControlManager
@@ -230,28 +229,29 @@ namespace ControlManager
 
                     //data 리스트에 구별자를 넣고  tag가 있다
                     //컨트롤 구별자랑 foreach로 다 찾아가면서 
-                    foreach(DigiImageData data in digiImageData)
-                    {
-                        if(control.Tag.ToString() == data.UniqueTag)
-                        {
+                    //foreach(DigiImageData data in digiImageData)
+                    //{
+                    //    if(control.Tag.ToString() == data.UniqueTag)
+                    //    {
 
-                        }
-                    }
-                    //일치하는 class를 넣어준다
-                    //
-                    int datacount = 0;
-
-                    diform.SetDialog(digiImageData[datacount]);
+                    //    }
+                    //}
+                    ////일치하는 class를 넣어준다
+                    ////
+                    //int datacount = 0;
+                    //diform.SetDialog(digiImageData[datacount]);
 
                     if (diform.ShowDialog() == DialogResult.OK)
                     {
-                        DigiImageData setimage = diform.ReturnValue();
+                        DigiImageData setimage = diform.ReturnValue(control);
                         digiImageData.Add(setimage);
                     }
                 }    
                 else if ("static" == control.Name)
                 {
                     //컨트롤을 받아서 구조체로 넣는 함수 필요함 
+                    StaticImageData setimage = new StaticImageData();                    
+                    staImageData.Add(setimage);
                 }
             }
             else if ( typeName =="TextBox")
@@ -260,10 +260,9 @@ namespace ControlManager
                 //받아와서 Set하기
                 alform.SetDialog((TextBox)control);
 
-
                 if (alform.ShowDialog() == DialogResult.OK)
                 {
-                    AnaTextData settext = alform.ReturnValue();
+                    AnaTextData settext = alform.ReturnValue(control);
                     control.ForeColor = alform.ReturnColor();
                     control.Text = settext.Tag;
 
@@ -275,9 +274,7 @@ namespace ControlManager
 
                     FontStyle fstyle = FontStyle.Regular;
                     if ("Bold" == settext.FontWeight) fstyle = FontStyle.Bold;
-
                     control.Font = new Font(control.Font.FontFamily, size, fstyle);
-
                     control.Refresh();
 
                     altextData.Add(settext);
@@ -319,7 +316,7 @@ namespace ControlManager
             return controls.SelectMany(ctrl => GetAllChildControls(ctrl, list)).ToList();
         }
 
-        internal static string GetSizeAndPositionOfControlsToString(Control container)
+        internal static string GetControlFormat(Control container)
         {
             List<Control> controls = new List<Control>();
             GetAllChildControls(container, controls);
@@ -337,7 +334,7 @@ namespace ControlManager
             }
             return info;
         }
-        internal static void SetSizeAndPositionOfControlsFromString(Control container, string controlsInfoStr)
+        internal static void SaveControlFormat(Control container, string controlsInfoStr)
         {
             List<Control> controls = new List<Control>();
             GetAllChildControls(container, controls);

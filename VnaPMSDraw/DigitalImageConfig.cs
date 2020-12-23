@@ -54,7 +54,7 @@ namespace VnaPMSDraw
         }
         #endregion
 
-        public DigiImageData ReturnValue()
+        public DigiImageData ReturnValue(Control ctrl)
         {
             DigiImageData temp = new DigiImageData();
 
@@ -71,9 +71,13 @@ namespace VnaPMSDraw
             if (text_Value4_Path.Text != "")    temp.path[3] = text_Value4_Path.Text;
 
             //tag데이터가 아니라 구분자를 tag라고 하드라 VS에서
-            temp.UniqueTag = this.Tag.ToString();
+            temp.UniqueTag = ctrl.Tag.ToString();
+            temp.Postion = ctrl.PointToClient(ctrl.Location);
+            temp.height = ctrl.Size.Height;
+            temp.weight = ctrl.Size.Width;
 
             if (text_TAG_Dig.Text != "") temp.Tag = text_TAG_Dig.Text;
+            
 
             return temp;
         }

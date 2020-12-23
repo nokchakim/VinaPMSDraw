@@ -84,7 +84,7 @@ namespace VnaPMSDraw
             return lab_Color.BackColor;
         }
 
-        public AnaTextData ReturnValue()
+        public AnaTextData ReturnValue(Control ctrl)
         {
             AnaTextData temp = new AnaTextData();
             temp.Tag = string.Format("{0}", text_TAG.Text);
@@ -92,6 +92,10 @@ namespace VnaPMSDraw
             temp.FontSize = string.Format(combo_FontSIze.SelectedItem.ToString());
             temp.FontWeight = string.Format(combo_FontBold.SelectedItem.ToString());
             temp.Zindex = combo_Zindex.SelectedIndex;
+            temp.UniqueTag = ctrl.Tag.ToString();
+            temp.Postion = ctrl.PointToClient(ctrl.Location);
+            temp.height = ctrl.Size.Height;
+            temp.weight = ctrl.Size.Width;
 
             return temp;
         }
