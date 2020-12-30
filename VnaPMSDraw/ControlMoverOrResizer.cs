@@ -226,6 +226,7 @@ namespace ControlManager
                 if("Digital" == control.Name)
                 {
                     DigitalImageConfig diform = new DigitalImageConfig();
+                    PictureBox pb = (PictureBox)control;
 
                     //data 리스트에 구별자를 넣고  tag가 있다
                     //컨트롤 구별자랑 foreach로 다 찾아가면서 
@@ -244,14 +245,41 @@ namespace ControlManager
                     if (diform.ShowDialog() == DialogResult.OK)
                     {
                         DigiImageData setimage = diform.ReturnValue(control);
-                        digiImageData.Add(setimage);
+                      //  digiImageData.Add(setimage);
                     }
                 }    
                 else if ("static" == control.Name)
                 {
                     //컨트롤을 받아서 구조체로 넣는 함수 필요함 
-                    StaticImageData setimage = new StaticImageData();                    
-                    staImageData.Add(setimage);
+                    StaticImageData setimage = new StaticImageData();
+                    PictureBox pb = (PictureBox)control;
+
+                    if(pb.Tag.ToString() == "")
+                    {
+                        setimage.filename = pb.ImageLocation;
+                        setimage.Postion.X = pb.Left;
+                        setimage.Postion.Y = pb.Top;
+                        pb.BackColor = Color.Transparent;                        
+
+                        //기존 control 에 tag로 data 작성을 표기 함
+                        //데이터 구조체 tag에도 작성을 표기 함
+                        //TAG 데이터가 있다 -> 그럼 둘이 비교해서 같은 경우 list에서 수정되는것
+                        //TAG 데이터가 있다 -> 둘이 다르면 그냥 스킾임
+                        control.Tag = DateTime.Now.ToString("yyyyMMddHHmmssfff");
+                        setimage.tag = DateTime.Now.ToString("yyyyMMddHHmmssfff");
+                        
+                        setimage.filename = System.IO.Path.GetFileName(pb.ImageLocation);
+
+                        DataStructALL DataContainer = DataStructALL.Instance();
+                        DataContainer.Add_StaticImageData(setimage);
+
+                        MessageBox.Show("set Data Comp");
+                    }
+                    else
+                    {
+                        MessageBox.Show("set Data");
+                    }
+
                 }
             }
             else if ( typeName =="TextBox")
@@ -277,7 +305,11 @@ namespace ControlManager
                     control.Font = new Font(control.Font.FontFamily, size, fstyle);
                     control.Refresh();
 
-                    altextData.Add(settext);
+
+                    DataStructALL DataContainer = DataStructALL.Instance();
+                    DataContainer.Add_AnaTextData(settext);
+
+
                 }
             }
     

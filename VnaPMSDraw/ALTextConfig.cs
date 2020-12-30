@@ -96,6 +96,7 @@ namespace VnaPMSDraw
             temp.Postion = ctrl.PointToClient(ctrl.Location);
             temp.height = ctrl.Size.Height;
             temp.weight = ctrl.Size.Width;
+            temp._id = ctrl.Tag.ToString();
 
             return temp;
         }

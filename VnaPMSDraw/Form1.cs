@@ -27,13 +27,6 @@ namespace VnaPMSDraw
         ContextMenuStrip ctms = new ContextMenuStrip();
         
         Point ClickMousePoint;
-        private string controlsInfoStr;
-
-
-        List<AnaTextData> altextData = null;
-        List<DigiImageData> digiImageData = null;
-        List<StaticImageData> staImageData = null;
-
 
         public BackForm()
         {
@@ -134,6 +127,7 @@ namespace VnaPMSDraw
             //여기서 적용해서 picture box 에 그림 그리고
         }
 
+        //contextmenu 호출 오른쪽 마우스 이벤트에 걸어놓음
         private void MouseRigltClick(object sender, MouseEventArgs e)
         {
             if(e.Button == MouseButtons.Right)
@@ -145,6 +139,8 @@ namespace VnaPMSDraw
             }
         }
 
+        #region 필드에 올릴 객체들을 생성 합니다. 
+        //스태틱 이미지
         public void StaticImage_Add(object sender, EventArgs e)
         {
             string strtemp = FilePath();
@@ -155,8 +151,8 @@ namespace VnaPMSDraw
             pb.Left = ClickMousePoint.X;
             pb.Top = ClickMousePoint.Y;
             pb.BackColor = Color.Transparent;
-
-            pb.Tag = DateTime.Now.ToString("yyyyMMddHHmmssfff");
+            pb.Tag = string.Format("");
+            pb.ImageLocation = strtemp;
 
             //key down event             
             ControlMoverOrResizer.Init(pb);
@@ -164,6 +160,7 @@ namespace VnaPMSDraw
             this.Refresh();
         }
 
+        //아날로그 텍스트
         private void AnalogueText_Add(object sender, EventArgs e)
         {
             TextBox tb = new TextBox();           
@@ -181,6 +178,7 @@ namespace VnaPMSDraw
             this.Refresh();
         }
 
+        //디지탈 이미지
         private void DigitalImage_Add(object sender, EventArgs e)
         {
             string strtemp = FilePath();
@@ -197,6 +195,8 @@ namespace VnaPMSDraw
             this.Controls.Add(pb);
             this.Refresh();
         }
+
+        #endregion
 
         private void ControlDelete(object sender, EventArgs e)
         {
@@ -236,6 +236,8 @@ namespace VnaPMSDraw
             this.BackgroundImageLayout = ImageLayout.Stretch;
             this.Refresh();
 
+            DataStructALL DataContainer = DataStructALL.Instance();
+            DataContainer.DeleteAllData();
         }
 
         private void eXPORTToolStripMenuItem_Click(object sender, EventArgs e)
@@ -243,35 +245,42 @@ namespace VnaPMSDraw
             //출력 파일 이름은 main background name 으로
 
               string strSavename = this.Text;
+              string path = MakeHtmlTextFile(strSavename);
 
-          //  controlsInfoStr = ControlMoverOrResizer.GetControlFormat(this);
-            
-            foreach(AnaTextData textdata in altextData)
-            {
-                textdata.GetData();
-                string jsonstring = JsonConvert.SerializeObject(textdata, Formatting.None);
-            }
+            //  controlsInfoStr = ControlMoverOrResizer.GetControlFormat(this);
 
-            foreach (DigiImageData imagedata in digiImageData)
-            {
-                imagedata.GetData();
-                string jsonstring = JsonConvert.SerializeObject(imagedata, Formatting.None);
-            }
+            //foreach (AnaTextData textdata in altextData)
+            //{
+            //    textdata.GetData();
+            //    string jsonstring = JsonConvert.SerializeObject(textdata, Formatting.None);
+            //    MakeAnalogueTextHtmlCode(textdata, path);
+            //}
+
+            //foreach (DigiImageData imagedata in digiImageData)
+            //{
+            //    imagedata.GetData();
+            //    string jsonstring = JsonConvert.SerializeObject(imagedata, Formatting.None);
+            //    MakeDigitalImageHtmlCode(imagedata, path);
+            //}
+            DataStructALL DataContainer = DataStructALL.Instance();
+            List<StaticImageData> staImageData = DataContainer.Info_StaticImageData();
 
             foreach (StaticImageData imagedata in staImageData)
-            {
-                imagedata.GetData();
-                string jsonstring = JsonConvert.SerializeObject(imagedata, Formatting.None);
-            }
+                {
+                    imagedata.GetData();
+                    string jsonstring = JsonConvert.SerializeObject(imagedata, Formatting.None);
+
+                    MakeStaticImageHtmlCode(imagedata, path);
+                }
         }
 
 
         private void iMPORTToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(controlsInfoStr))
-            {
-                ControlMoverOrResizer.SaveControlFormat(this, controlsInfoStr);
-            }
+            //if (!string.IsNullOrWhiteSpace(controlsInfoStr))
+            //{
+            //    ControlMoverOrResizer.SaveControlFormat(this, controlsInfoStr);
+            //}
 
             //json에서 구분별로 data를 가져와서 넣어줌
             //1. analogue text json불러와서 -> textbox 생성 and statictextdata에 add
@@ -310,6 +319,123 @@ namespace VnaPMSDraw
             this.BeginInvoke(new Action(() => { this.menuStrip1.Visible = false; }));
         }
 
+        #region HTML TAG 만드는 구간
+        private void MakeStaticImageHtmlCode(StaticImageData data, string path)
+        {
+            System.IO.FileInfo info = new System.IO.FileInfo(path);
+            System.IO.StreamWriter writer = File.Exists(path) ? info.AppendText() : info.CreateText();
+
+            StringBuilder code = new StringBuilder();
+
+            string div = string.Format("</div>");
+            code.Append("<div class=\"PMS_Image_Item ui-draggable ui-draggable-handle ui-resizable\" link=\"\"");
+            code.Append(" style=\"position: absolute; ");
+
+            string position = string.Format("top: {0}px; left: {1}px; z-index: {2}; \">", data.Postion.X, data.Postion.Y, data.zindex);
+            code.Append(position);
+
+            string imagepath = string.Format("<img src=\"/symbols/{0}\" style=\"width:100%;height;100%\">", data.filename);
+            code.Append(imagepath);
+
+            string temp = string.Format("<div class=\"ui-resizable-handle ui-resizable-e\" style=\"z-index: 90;\">");
+            code.Append(temp);
+            code.Append(div);
+            code.Append(temp);
+            code.Append(div);
+
+            temp = string.Format("<div class=\"ui-resizable-handle ui-resizable-se ui-icon ui-icon-gripsmall-diagonal-se\" style=\"z-index: 90;\">");
+
+            code.Append(temp);
+            code.Append(div);
+            code.Append(div);
+
+            writer.WriteLine(code.ToString());
+            writer.Flush();
+            writer.Close();
+        }
+
+
+        private void MakeDigitalImageHtmlCode(DigiImageData data, string path)
+        {
+            System.IO.FileInfo info = new System.IO.FileInfo(path);
+            System.IO.StreamWriter writer = File.Exists(path) ? info.AppendText() : info.CreateText();
+
+            StringBuilder code = new StringBuilder();
+
+            string div = string.Format("</div>");            
+
+            writer.WriteLine(code.ToString());
+            writer.Flush();
+            writer.Close();
+        }
+
+        private void MakeAnalogueTextHtmlCode(AnaTextData data, string path)
+        {
+            System.IO.FileInfo info = new System.IO.FileInfo(path);
+            System.IO.StreamWriter writer = File.Exists(path) ? info.AppendText() : info.CreateText();
+
+            StringBuilder code = new StringBuilder();
+
+            string div = string.Format("</div>");          
+            //태그 고유아이디랑 텍스트 사이즈
+            string temp = string.Format("<div id=\"{0}\" class=\"PMS_Tag_Item ui-draggable ui-draggable-handle Text_Small {1}\"", data._id, data.FontSize);
+            code.Append(temp);
+
+            //태그 주소값이랑 소수점 자리수 
+            temp = string.Format(" opc-tag-txt=\"{{'tag':'{0}.Value','config': {{'formats': {{'bad_q':'???','float':'{1}'}}}}}}\"", data.Tag, data.Float);
+            code.Append(temp);
+
+            //색상 
+            temp = string.Format(" d=\"#{0}\" hh=\"#{1}\" h=\"#{2}\" l=\"#{3}\" ll=\"#{4}\" style=\"position: absolute; top: {5}px; left: {6}px; color: rgb(255, 255, 255);\"",
+                data.FontColor, data.HHColor, data.HColor, data.LColor, data.LLColor, data.Postion.X, data.Postion.Y);
+            code.Append(temp);
+
+            //인덱스랑 view에 쓸 내용
+            temp = string.Format(" z-index: 5;\" > {0} </div>", data.Tag);
+            code.Append(temp);
+
+
+            writer.WriteLine(code.ToString());
+            writer.Flush();
+            writer.Close();
+        }
+
+        #endregion
+
+
+        #region HTML 파일로 빼는 구간
+        public string MakeHtmlTextFile(string PageName)
+        {  
+            string localpath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            localpath = string.Format(localpath + ("\\"));
+            localpath = string.Format(localpath + "VINA PMS DRAW"); 
+            localpath = string.Format(localpath + ("\\"));
+        
+            StringBuilder path1 = new StringBuilder();
+            path1.Append(localpath);
+            if (!Directory.Exists(path1.ToString()))
+            {
+                try
+                {
+                    Directory.CreateDirectory(path1.ToString());
+                }
+                catch(Exception e)
+                {
+                    MessageBox.Show(e.ToString());
+                    return "";
+                }
+            }
+            string srcFile = string.Format("{0}{1}.txt", localpath, PageName);
+            System.IO.FileInfo info = new System.IO.FileInfo(srcFile);
+            System.IO.StreamWriter writer = File.Exists(srcFile) ? info.AppendText() : info.CreateText();      
+            
+            writer.Flush();
+            writer.Close();
+
+            return srcFile;
+        }
+
+        #endregion
     }
 }
 
