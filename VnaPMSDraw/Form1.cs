@@ -25,7 +25,8 @@ namespace VnaPMSDraw
 
         //우클릭 메뉴 
         ContextMenuStrip ctms = new ContextMenuStrip();
-        
+
+                
         Point ClickMousePoint;
 
         public BackForm()
@@ -34,8 +35,7 @@ namespace VnaPMSDraw
             //우클릭 메뉴 항목 추가                              
             ctms.Items.Add("Analogue Text",null, AnalogueText_Add);
             ctms.Items.Add("Digital Image", null, DigitalImage_Add);
-            ctms.Items.Add("Static Image", null, StaticImage_Add);         
- 
+            ctms.Items.Add("Static Image", null, StaticImage_Add);       
         }
 
         private void Form1_DragEnter(object sender, DragEventArgs e)
@@ -85,7 +85,12 @@ namespace VnaPMSDraw
 
             OpenFileDialog dialog = new OpenFileDialog();
 
-            dialog.InitialDirectory = @"D:\";
+            string localpath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            localpath = string.Format(localpath + ("\\"));
+            localpath = string.Format(localpath + "VINA PMS DRAW");
+            localpath = string.Format(localpath + ("\\"));
+
+            dialog.InitialDirectory = localpath;
 
             if (dialog.ShowDialog() == DialogResult.OK)
             {
@@ -139,11 +144,18 @@ namespace VnaPMSDraw
             }
         }
 
+        public string returnSymbolImagePath()
+        {
+            string localpath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            localpath = string.Format(localpath + ("\\VINA PMS DRAW\\IMAGE\\Symbols\\"));
+            return localpath;
+        }
+
         #region 필드에 올릴 객체들을 생성 합니다. 
         //스태틱 이미지
         public void StaticImage_Add(object sender, EventArgs e)
         {
-            string strtemp = FilePath();
+            string strtemp = FilePath();            
             PictureBox pb = new PictureBox();
             pb.Name = "static";
             pb.Image = new Bitmap(strtemp);
@@ -156,6 +168,23 @@ namespace VnaPMSDraw
 
             //key down event             
             ControlMoverOrResizer.Init(pb);
+            this.Controls.Add(pb);
+            this.Refresh();
+        }
+        public void StaticImage_Add(StaticImageData data)
+        {
+            PictureBox pb = new PictureBox();
+            pb.Name = "static";
+            string fullpath = string.Format(returnSymbolImagePath() + data.filename);            
+            pb.Image = Image.FromFile(fullpath);
+            pb.SizeMode = PictureBoxSizeMode.StretchImage;
+            pb.Left = data.Postion.X;
+            pb.Top = data.Postion.Y;
+            pb.BackColor = Color.Transparent;
+            pb.Tag = data.tag;
+            pb.ImageLocation = fullpath;
+            //key down event             
+            ControlMoverOrResizer.Init(pb);            
             this.Controls.Add(pb);
             this.Refresh();
         }
@@ -178,6 +207,24 @@ namespace VnaPMSDraw
             this.Refresh();
         }
 
+        private void AnalogueText_Add(AnaTextData data)
+        {
+            TextBox tb = new TextBox();
+            tb.Name = "analogue";
+            tb.Text = data.Tag;
+            tb.Left = data.Postion.X;
+            tb.Top = data.Postion.Y;
+            //string 을 컬러로 변환해서 넣어야지
+            //tb.ForeColor = data.FontColor;
+            tb.BackColor = Color.Black;
+            //tb.BackColor = Color.FromArgb(0, 0, 0, 0); 텍스트박스는 투명해지지 않는다!
+            tb.Tag = data.UniqueTag;
+
+            ControlMoverOrResizer.Init(tb);
+            this.Controls.Add(tb);
+            this.Refresh();
+        }
+
         //디지탈 이미지
         private void DigitalImage_Add(object sender, EventArgs e)
         {
@@ -194,6 +241,11 @@ namespace VnaPMSDraw
             ControlMoverOrResizer.Init(pb);
             this.Controls.Add(pb);
             this.Refresh();
+        }
+
+        private void DigitalImage_Add(DigiImageData data)
+        {
+
         }
 
         #endregion
@@ -243,49 +295,108 @@ namespace VnaPMSDraw
         private void eXPORTToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //출력 파일 이름은 main background name 으로
-
-              string strSavename = this.Text;
-              string path = MakeHtmlTextFile(strSavename);
-
-            //  controlsInfoStr = ControlMoverOrResizer.GetControlFormat(this);
-
-            //foreach (AnaTextData textdata in altextData)
-            //{
-            //    textdata.GetData();
-            //    string jsonstring = JsonConvert.SerializeObject(textdata, Formatting.None);
-            //    MakeAnalogueTextHtmlCode(textdata, path);
-            //}
-
-            //foreach (DigiImageData imagedata in digiImageData)
-            //{
-            //    imagedata.GetData();
-            //    string jsonstring = JsonConvert.SerializeObject(imagedata, Formatting.None);
-            //    MakeDigitalImageHtmlCode(imagedata, path);
-            //}
+            string strSavename = this.Text;
+            string path = MakeHtmlTextFile(strSavename);
+            //데이터 클래스 인스턴스를 받아온 후 
             DataStructALL DataContainer = DataStructALL.Instance();
+
+            //아날로그 텍스트 데이터 출력
+            List<AnaTextData> AnatextData = DataContainer.Info_AnaTextData();
+            foreach (AnaTextData textdata in AnatextData)
+            {
+                textdata.GetData();                
+                MakeAnalogueTextHtmlCode(textdata, path);
+            }
+            string jsonstring = JsonConvert.SerializeObject(AnatextData.ToArray(), Formatting.Indented);
+            JsonFileSave(("AnalogueText"), jsonstring);
+
+
+            //디지털 이미지 데이터 출력
+            List<DigiImageData> digiImageData = DataContainer.Info_DigiImageData();
+            foreach (DigiImageData imagedata in digiImageData)
+            {
+                imagedata.GetData();                
+                MakeDigitalImageHtmlCode(imagedata, path);
+            }
+            jsonstring = JsonConvert.SerializeObject(digiImageData.ToArray(), Formatting.Indented);
+            JsonFileSave(("DigitalImage"), jsonstring);
+
+            //스태틱 이미지 데이터 출력
             List<StaticImageData> staImageData = DataContainer.Info_StaticImageData();
-
             foreach (StaticImageData imagedata in staImageData)
-                {
-                    imagedata.GetData();
-                    string jsonstring = JsonConvert.SerializeObject(imagedata, Formatting.None);
+            {
+                imagedata.GetData();                
+                MakeStaticImageHtmlCode(imagedata, path);
+            }
+            jsonstring = JsonConvert.SerializeObject(staImageData.ToArray(), Formatting.Indented);
+            JsonFileSave(("StaticImage"), jsonstring);
 
-                    MakeStaticImageHtmlCode(imagedata, path);
-                }
+            MessageBox.Show("저장 완료");
         }
 
 
         private void iMPORTToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //if (!string.IsNullOrWhiteSpace(controlsInfoStr))
-            //{
-            //    ControlMoverOrResizer.SaveControlFormat(this, controlsInfoStr);
-            //}
+            //폴더선택부터합시다
+            string localpath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            localpath = string.Format(localpath + ("\\VINA PMS DRAW\\SAVE\\"));
+            string currentName = string.Format(this.Text);
+            localpath = localpath + currentName + ("\\");
+            DataStructALL DataContainer = DataStructALL.Instance();
 
-            //json에서 구분별로 data를 가져와서 넣어줌
-            //1. analogue text json불러와서 -> textbox 생성 and statictextdata에 add
-            //1. static image json불러와서 -> picture 생성 and statictextdata에 add
-            //1. digital image json불러와서 -> picture 생성 and statictextdata에 add
+            if (MessageBox.Show((currentName + "의 데이터를 로드 하시겠습니까?"),"Load", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {               
+                try
+                {
+                    //아날로그 텍스트 데이터 불러오기
+                    string jsonfilename = string.Format(localpath + ("AnalogueText.json"));
+                    using (StreamReader jsonread = new StreamReader(jsonfilename))
+                    {
+                        string json = jsonread.ReadToEnd();
+                        List<AnaTextData> items = JsonConvert.DeserializeObject<List<AnaTextData>>(json);
+                        DataContainer.Apply_AnaTextData(items);
+                        items = DataContainer.Info_AnaTextData();
+                        foreach (AnaTextData data in items)
+                        {
+                            AnalogueText_Add(data);
+                        }
+
+                    }
+
+                    //디지털 이미지 데이터 불러오기
+                    jsonfilename = string.Format(localpath + ("DigitalImage.json"));
+                    using (StreamReader jsonread = new StreamReader(jsonfilename))
+                    {
+                        string json = jsonread.ReadToEnd();
+                        List<DigiImageData> items = JsonConvert.DeserializeObject<List<DigiImageData>>(json);
+                        DataContainer.Apply_DigiImageData(items);
+
+                        items = DataContainer.Info_DigiImageData();
+                        foreach (DigiImageData data in items)
+                        {
+                            DigitalImage_Add(data);
+                        }
+                    }
+
+                    //스태틱 이미지 데이터 불러오기
+                    jsonfilename = string.Format(localpath + ("StaticImage.json"));
+                    using (StreamReader jsonread = new StreamReader(jsonfilename))
+                    {
+                        string json = jsonread.ReadToEnd();
+                        List<StaticImageData> items = JsonConvert.DeserializeObject<List<StaticImageData>>(json);
+                        DataContainer.Apply_StaticImageData(items);
+                        items = DataContainer.Info_StaticImageData();
+                        foreach(StaticImageData data in items)
+                        {
+                            StaticImage_Add(data);                            
+                        }
+                    }
+                }
+                catch
+                {
+                    MessageBox.Show("저장 Json File 불러오기 실패");
+                }               
+            }
 
         }
 
@@ -435,6 +546,30 @@ namespace VnaPMSDraw
             return srcFile;
         }
 
+
+        public void JsonFileSave(string path, string jsontext)
+        {
+            string localpath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            localpath = string.Format(localpath + ("\\VINA PMS DRAW\\SAVE\\"));
+            string currentName = string.Format(this.Text);
+            localpath = localpath + currentName + ("\\");
+
+            string jsonfilename = string.Format(localpath + path + (".json"));
+
+            if (!Directory.Exists(localpath))
+            {
+                try
+                {
+                    Directory.CreateDirectory(localpath);
+                    File.WriteAllText(jsonfilename, jsontext);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.ToString());                 
+                }
+            }
+            else File.WriteAllText(jsonfilename, jsontext);
+        }
         #endregion
     }
 }

@@ -44,13 +44,13 @@ namespace VnaPMSDraw
 
         public string Tag;
         public string basepath;
-        public short[] value = new short[4];
-        public string[] path = new string[4];
+        public short[] value = new short[8];
+        public string[] path = new string[8];
         public string UniqueTag;
         public Point Postion;
         public int height;
         public int weight;
-
+        public int sizeRatio;
         public string tag;
         
 
@@ -71,10 +71,9 @@ namespace VnaPMSDraw
         public int zindex;
         public int height;
         public int weight;
-
         public string tag;
-
         public string filename;
+        public int sizeRatio;
 
         public string GetData()
         {
@@ -122,26 +121,44 @@ namespace VnaPMSDraw
 
         public void Modi_AnaTextData(AnaTextData data)
         {
-           
+            string temp = data.UniqueTag;
+            int index = 0;
+            foreach (AnaTextData textdata in altextData)
+            {
+                if (textdata.UniqueTag == temp)
+                {
+                    index = altextData.IndexOf(textdata);
+                }
+            }
+            altextData[index] = data;
         }
 
         public void Modi_DigiImageData(DigiImageData data)
         {
-
+            string temp = data.tag;
+            int index = 0;
+            foreach (DigiImageData imagedata in digiImageData)
+            {
+                if (imagedata.tag == temp)
+                {
+                    index = digiImageData.IndexOf(imagedata);
+                }
+            }
+            digiImageData[index] = data;
         }
 
         public void Modi_StaticImageData(StaticImageData data)
         {
-            string temp = data.tag;
-
+            string temp = data.tag;            
+            int index = 0;
             foreach (StaticImageData imagedata in staImageData)
             {
                 if (imagedata.tag == temp)
                 {
-                    int index = staImageData.IndexOf(imagedata);
-                    staImageData[index] = data;
+                    index = staImageData.IndexOf(imagedata);                   
                 }
             }
+            staImageData[index] = data;
         }
 
 
@@ -163,6 +180,23 @@ namespace VnaPMSDraw
         public List<AnaTextData> Info_AnaTextData()
         {
             return altextData;
+        }
+
+        public void Apply_DigiImageData(List<DigiImageData> data)
+        {
+            digiImageData.Clear();
+            digiImageData = data;
+        }
+        public void Apply_StaticImageData(List<StaticImageData> data)
+        {
+            staImageData.Clear();
+            staImageData = data;
+        }
+
+        public void Apply_AnaTextData(List<AnaTextData> data)
+        {
+            altextData.Clear();
+            altextData = data;
         }
 
 

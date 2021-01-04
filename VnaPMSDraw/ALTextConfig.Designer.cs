@@ -39,6 +39,14 @@
             this.btn_OK = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.lab_Color = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.lab_HH = new System.Windows.Forms.Label();
+            this.lab_H = new System.Windows.Forms.Label();
+            this.lab_LL = new System.Windows.Forms.Label();
+            this.lab_L = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // combo_FontSIze
@@ -132,7 +140,7 @@
             this.label5.Font = new System.Drawing.Font("굴림", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.label5.Location = new System.Drawing.Point(52, 145);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(80, 30);
+            this.label5.Size = new System.Drawing.Size(64, 24);
             this.label5.TabIndex = 9;
             this.label5.Text = "Color";
             // 
@@ -143,17 +151,117 @@
             this.lab_Color.Font = new System.Drawing.Font("굴림", 14F);
             this.lab_Color.Location = new System.Drawing.Point(138, 145);
             this.lab_Color.Name = "lab_Color";
-            this.lab_Color.Size = new System.Drawing.Size(80, 30);
+            this.lab_Color.Size = new System.Drawing.Size(64, 24);
             this.lab_Color.TabIndex = 10;
             this.lab_Color.Text = "Color";
             this.lab_Color.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lab_Color.Click += new System.EventHandler(this.lab_Color_Click);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("굴림", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label6.Location = new System.Drawing.Point(246, 145);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(50, 30);
+            this.label6.TabIndex = 11;
+            this.label6.Text = "HH";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("굴림", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label7.Location = new System.Drawing.Point(246, 186);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(31, 30);
+            this.label7.TabIndex = 12;
+            this.label7.Text = "H";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("굴림", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label8.Location = new System.Drawing.Point(361, 186);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(29, 30);
+            this.label8.TabIndex = 14;
+            this.label8.Text = "L";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("굴림", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label9.Location = new System.Drawing.Point(361, 145);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(45, 30);
+            this.label9.TabIndex = 13;
+            this.label9.Text = "LL";
+            // 
+            // lab_HH
+            // 
+            this.lab_HH.AutoSize = true;
+            this.lab_HH.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.lab_HH.Font = new System.Drawing.Font("굴림", 14F);
+            this.lab_HH.Location = new System.Drawing.Point(286, 145);
+            this.lab_HH.Name = "lab_HH";
+            this.lab_HH.Size = new System.Drawing.Size(64, 24);
+            this.lab_HH.TabIndex = 15;
+            this.lab_HH.Text = "Color";
+            this.lab_HH.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lab_HH.Click += new System.EventHandler(this.lab_HH_Click);
+            // 
+            // lab_H
+            // 
+            this.lab_H.AutoSize = true;
+            this.lab_H.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.lab_H.Font = new System.Drawing.Font("굴림", 14F);
+            this.lab_H.Location = new System.Drawing.Point(286, 185);
+            this.lab_H.Name = "lab_H";
+            this.lab_H.Size = new System.Drawing.Size(64, 24);
+            this.lab_H.TabIndex = 16;
+            this.lab_H.Text = "Color";
+            this.lab_H.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lab_H.Click += new System.EventHandler(this.lab_H_Click);
+            // 
+            // lab_LL
+            // 
+            this.lab_LL.AutoSize = true;
+            this.lab_LL.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.lab_LL.Font = new System.Drawing.Font("굴림", 14F);
+            this.lab_LL.Location = new System.Drawing.Point(400, 145);
+            this.lab_LL.Name = "lab_LL";
+            this.lab_LL.Size = new System.Drawing.Size(64, 24);
+            this.lab_LL.TabIndex = 17;
+            this.lab_LL.Text = "Color";
+            this.lab_LL.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lab_LL.Click += new System.EventHandler(this.lab_LL_Click);
+            // 
+            // lab_L
+            // 
+            this.lab_L.AutoSize = true;
+            this.lab_L.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.lab_L.Font = new System.Drawing.Font("굴림", 14F);
+            this.lab_L.Location = new System.Drawing.Point(400, 185);
+            this.lab_L.Name = "lab_L";
+            this.lab_L.Size = new System.Drawing.Size(64, 24);
+            this.lab_L.TabIndex = 18;
+            this.lab_L.Text = "Color";
+            this.lab_L.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lab_L.Click += new System.EventHandler(this.lab_L_Click);
             // 
             // ALTextConfig
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(609, 313);
+            this.Controls.Add(this.lab_L);
+            this.Controls.Add(this.lab_LL);
+            this.Controls.Add(this.lab_H);
+            this.Controls.Add(this.lab_HH);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.lab_Color);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.btn_OK);
@@ -185,5 +293,13 @@
         private System.Windows.Forms.Button btn_OK;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label lab_Color;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label lab_HH;
+        private System.Windows.Forms.Label lab_H;
+        private System.Windows.Forms.Label lab_LL;
+        private System.Windows.Forms.Label lab_L;
     }
 }

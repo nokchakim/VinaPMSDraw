@@ -89,6 +89,11 @@ namespace VnaPMSDraw
             AnaTextData temp = new AnaTextData();
             temp.Tag = string.Format("{0}", text_TAG.Text);
             temp.FontColor = string.Format("{0:X2}{1:X2}{2:X2}", lab_Color.BackColor.R, lab_Color.BackColor.G, lab_Color.BackColor.B);
+            temp.HHColor = string.Format("{0:X2}{1:X2}{2:X2}", lab_HH.BackColor.R, lab_HH.BackColor.G, lab_HH.BackColor.B);
+            temp.HColor = string.Format("{0:X2}{1:X2}{2:X2}", lab_H.BackColor.R, lab_H.BackColor.G, lab_H.BackColor.B);
+            temp.LLColor = string.Format("{0:X2}{1:X2}{2:X2}", lab_LL.BackColor.R, lab_LL.BackColor.G, lab_LL.BackColor.B);
+            temp.LColor = string.Format("{0:X2}{1:X2}{2:X2}", lab_L.BackColor.R, lab_L.BackColor.G, lab_L.BackColor.B);
+
             temp.FontSize = string.Format(combo_FontSIze.SelectedItem.ToString());
             temp.FontWeight = string.Format(combo_FontBold.SelectedItem.ToString());
             temp.Zindex = combo_Zindex.SelectedIndex;
@@ -105,6 +110,46 @@ namespace VnaPMSDraw
         {
             text_TAG.Text = text.Text;
             lab_Color.BackColor = text.ForeColor;            
+        }
+
+        private void lab_HH_Click(object sender, EventArgs e)
+        {
+            ColorDialog cd = new ColorDialog();
+            if (cd.ShowDialog() == DialogResult.OK)
+            {
+                lab_HH.BackColor = cd.Color;
+                //
+            }
+        }
+
+        private void lab_LL_Click(object sender, EventArgs e)
+        {
+            ColorDialog cd = new ColorDialog();
+            if (cd.ShowDialog() == DialogResult.OK)
+            {
+                lab_LL.BackColor = cd.Color;
+                //
+            }
+        }
+
+        private void lab_H_Click(object sender, EventArgs e)
+        {
+            ColorDialog cd = new ColorDialog();
+            if (cd.ShowDialog() == DialogResult.OK)
+            {
+                lab_H.BackColor = cd.Color;
+                //
+            }
+        }
+
+        private void lab_L_Click(object sender, EventArgs e)
+        {
+            ColorDialog cd = new ColorDialog();
+            if (cd.ShowDialog() == DialogResult.OK)
+            {
+                lab_L.BackColor = cd.Color;
+                //
+            }
         }
     }
 }

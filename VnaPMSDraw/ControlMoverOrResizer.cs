@@ -228,6 +228,7 @@ namespace ControlManager
                     DigitalImageConfig diform = new DigitalImageConfig();
                     PictureBox pb = (PictureBox)control;
 
+
                     //data 리스트에 구별자를 넣고  tag가 있다
                     //컨트롤 구별자랑 foreach로 다 찾아가면서 
                     //foreach(DigiImageData data in digiImageData)
@@ -266,8 +267,9 @@ namespace ControlManager
                         //TAG 데이터가 있다 -> 그럼 둘이 비교해서 같은 경우 list에서 수정되는것
                         //TAG 데이터가 있다 -> 둘이 다르면 그냥 스킾임
                         control.Tag = DateTime.Now.ToString("yyyyMMddHHmmssfff");
-                        setimage.tag = DateTime.Now.ToString("yyyyMMddHHmmssfff");
-                        
+                        setimage.tag = control.Tag.ToString();
+
+
                         setimage.filename = System.IO.Path.GetFileName(pb.ImageLocation);
 
                         DataStructALL DataContainer = DataStructALL.Instance();
@@ -276,7 +278,16 @@ namespace ControlManager
                         MessageBox.Show("set Data Comp");
                     }
                     else
-                    {
+                    {                        
+                        setimage.Postion.X = pb.Left;
+                        setimage.Postion.Y = pb.Top;
+                        pb.BackColor = Color.Transparent;
+                        setimage.tag = control.Tag.ToString();
+                        setimage.filename = System.IO.Path.GetFileName(pb.ImageLocation);
+
+                        DataStructALL DataContainer = DataStructALL.Instance();
+                        DataContainer.Modi_StaticImageData(setimage);
+
                         MessageBox.Show("set Data");
                     }
 
@@ -308,7 +319,6 @@ namespace ControlManager
 
                     DataStructALL DataContainer = DataStructALL.Instance();
                     DataContainer.Add_AnaTextData(settext);
-
 
                 }
             }
