@@ -54,7 +54,7 @@ namespace ControlManager
             control.MouseUp += (sender, e) => StopDragOrResizing(control);
             control.MouseMove += (sender, e) => MoveControl(container, e);
             control.MouseDoubleClick += (sender, e) => ViewConfig(control, e);
-            control.KeyDown += (sender, e) => DeleteControl(control, e);
+            control.KeyDown += (sender, e) => ControlKeyDonw(control, e);
 
         }
 
@@ -260,7 +260,11 @@ namespace ControlManager
                         setimage.filename = pb.ImageLocation;
                         setimage.Postion.X = pb.Left;
                         setimage.Postion.Y = pb.Top;
-                        pb.BackColor = Color.Transparent;                        
+                        setimage.width = pb.Width;
+                        setimage.height = pb.Height;
+
+                        pb.BackColor = Color.Transparent;     
+                        
 
                         //기존 control 에 tag로 data 작성을 표기 함
                         //데이터 구조체 tag에도 작성을 표기 함
@@ -281,6 +285,9 @@ namespace ControlManager
                     {                        
                         setimage.Postion.X = pb.Left;
                         setimage.Postion.Y = pb.Top;
+                        setimage.width = pb.Width;
+                        setimage.height = pb.Height;
+
                         pb.BackColor = Color.Transparent;
                         setimage.tag = control.Tag.ToString();
                         setimage.filename = System.IO.Path.GetFileName(pb.ImageLocation);
@@ -290,14 +297,35 @@ namespace ControlManager
 
                         MessageBox.Show("set Data");
                     }
-
                 }
             }
             else if ( typeName =="TextBox")
             {
                 ALTextConfig alform = new ALTextConfig();
                 //받아와서 Set하기
+                DataStructALL DataContainer = DataStructALL.Instance();
+
                 alform.SetDialog((TextBox)control);
+                bool resetflag = false;
+                if(control.Tag.ToString() != "")
+                {
+                    resetflag = true;
+                    //info해서 해당 anatextdata를 빼오고 넣기임
+                    List<AnaTextData> anatextdata = DataContainer.Info_AnaTextData();
+                    string temp = control.Tag.ToString();
+                    
+                    foreach (AnaTextData textdata in anatextdata)
+                    {
+                        if (textdata.UniqueTag == temp)
+                        {
+                            alform.SetDialog(textdata, resetflag);
+                        }
+                    }
+                }
+                else
+                {
+
+                }
 
                 if (alform.ShowDialog() == DialogResult.OK)
                 {
@@ -307,7 +335,7 @@ namespace ControlManager
 
                     int size = 12;
                     //small 8 medium 12 largr 24
-                    if ("Small" == settext.FontSize) size = 12;
+                    if ("Small" == settext.FontSize) size = 8;
                     else if ("Medium" == settext.FontSize) size = 12;
                     else if ("Large" == settext.FontSize) size = 24;
 
@@ -317,21 +345,49 @@ namespace ControlManager
                     control.Refresh();
 
 
-                    DataStructALL DataContainer = DataStructALL.Instance();
-                    DataContainer.Add_AnaTextData(settext);
-
+                    if (false == resetflag) DataContainer.Modi_AnaTextData(settext);
+                    else
+                    {
+                        settext.UniqueTag = DateTime.Now.ToString("yyyyMMddHHmmssfff");
+                        control.Tag = settext.UniqueTag;
+                        DataContainer.Add_AnaTextData(settext);
+                    }
                 }
-            }
-    
+            }    
         }
         #endregion
 
-        private static void DeleteControl(Control control, KeyEventArgs e)
+        private static void ControlKeyDonw(Control control, KeyEventArgs e)
         {
-          if(e.KeyCode == Keys.Delete)
-          {
-               control.Dispose();
-          }
+            string typeName = control.GetType().Name;
+            
+            if (e.KeyCode == Keys.Delete)
+            {
+                control.Dispose();
+            }
+          else if(e.KeyCode == Keys.D1)
+            {
+                if (typeName == "PictureBox")
+                {
+                    int width = control.Width;
+                    int height = control.Height;
+
+                    control.Width = (int)(width + (width * 0.1));
+                    control.Height = (int)(height + (height * 0.1));
+                }
+            }
+          else if(e.KeyCode == Keys.D2)
+            {
+                if (typeName == "PictureBox")
+                {
+                    int width = control.Width;
+                    int height = control.Height;
+
+                    control.Width = (int)(width - (width * 0.1));
+                    control.Height = (int)(height - (height * 0.1));
+                }
+            }
+            
           
         }
 

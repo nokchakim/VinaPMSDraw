@@ -11,6 +11,7 @@ using System.Threading;
 using System.Diagnostics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Globalization;
 using ControlManager;
 
 
@@ -155,21 +156,27 @@ namespace VnaPMSDraw
         //스태틱 이미지
         public void StaticImage_Add(object sender, EventArgs e)
         {
-            string strtemp = FilePath();            
-            PictureBox pb = new PictureBox();
-            pb.Name = "static";
-            pb.Image = new Bitmap(strtemp);
-            pb.SizeMode = PictureBoxSizeMode.StretchImage;
-            pb.Left = ClickMousePoint.X;
-            pb.Top = ClickMousePoint.Y;
-            pb.BackColor = Color.Transparent;
-            pb.Tag = string.Format("");
-            pb.ImageLocation = strtemp;
+            string strtemp = FilePath();     
+            if("" != strtemp)
+            {
+                PictureBox pb = new PictureBox();
+                pb.Name = "static";
+                pb.Image = new Bitmap(strtemp);
+                pb.SizeMode = PictureBoxSizeMode.StretchImage;
+                pb.Left = ClickMousePoint.X;
+                pb.Top = ClickMousePoint.Y;
+                pb.BackColor = Color.Transparent;
+                pb.Tag = string.Format("");
+                pb.ImageLocation = strtemp;
+                pb.Width = pb.Image.Width;
+                pb.Height = pb.Image.Height;
 
-            //key down event             
-            ControlMoverOrResizer.Init(pb);
-            this.Controls.Add(pb);
-            this.Refresh();
+                //key down event             
+                ControlMoverOrResizer.Init(pb);
+                this.Controls.Add(pb);
+                this.Refresh();
+            }
+            
         }
         public void StaticImage_Add(StaticImageData data)
         {
@@ -179,10 +186,13 @@ namespace VnaPMSDraw
             pb.Image = Image.FromFile(fullpath);
             pb.SizeMode = PictureBoxSizeMode.StretchImage;
             pb.Left = data.Postion.X;
-            pb.Top = data.Postion.Y;
+            pb.Top = data.Postion.Y;            
             pb.BackColor = Color.Transparent;
             pb.Tag = data.tag;
             pb.ImageLocation = fullpath;
+            pb.Width = data.width;
+            pb.Height = data.height;
+
             //key down event             
             ControlMoverOrResizer.Init(pb);            
             this.Controls.Add(pb);
@@ -214,10 +224,22 @@ namespace VnaPMSDraw
             tb.Text = data.Tag;
             tb.Left = data.Postion.X;
             tb.Top = data.Postion.Y;
+
             //string 을 컬러로 변환해서 넣어야지
-            //tb.ForeColor = data.FontColor;
+            tb.ForeColor = GetColorFromHex(data.FontColor);
             tb.BackColor = Color.Black;
-            //tb.BackColor = Color.FromArgb(0, 0, 0, 0); 텍스트박스는 투명해지지 않는다!
+
+            FontStyle fstyle = FontStyle.Regular;
+
+            int size = 12;
+            //small 8 medium 12 largr 24
+            if ("Small" == data.FontSize) size = 8;
+            else if ("Medium" == data.FontSize) size = 12;
+            else if ("Large" == data.FontSize) size = 24;
+
+            if ("Bold" == data.FontWeight) fstyle = FontStyle.Bold;
+            tb.Font = new Font(tb.Font.FontFamily, size, fstyle);
+
             tb.Tag = data.UniqueTag;
 
             ControlMoverOrResizer.Init(tb);
@@ -229,18 +251,23 @@ namespace VnaPMSDraw
         private void DigitalImage_Add(object sender, EventArgs e)
         {
             string strtemp = FilePath();
-            PictureBox pb = new PictureBox();
-            pb.Name = "Digital";
-            pb.Image = new Bitmap(strtemp);
-            pb.SizeMode = PictureBoxSizeMode.StretchImage;
-            pb.Left = ClickMousePoint.X;
-            pb.Top = ClickMousePoint.Y;
-            pb.Tag = DateTime.Now.ToString("yyyyMMddHHmmssfff");
-            pb.BackColor = Color.Transparent;
+            if ("" != strtemp)
+            {
+                PictureBox pb = new PictureBox();
+                pb.Name = "Digital";
+                pb.Image = new Bitmap(strtemp);
+                pb.SizeMode = PictureBoxSizeMode.StretchImage;
+                pb.Left = ClickMousePoint.X;
+                pb.Top = ClickMousePoint.Y;
+                pb.Tag = DateTime.Now.ToString("yyyyMMddHHmmssfff");
+                pb.BackColor = Color.Transparent;
 
-            ControlMoverOrResizer.Init(pb);
-            this.Controls.Add(pb);
-            this.Refresh();
+                ControlMoverOrResizer.Init(pb);
+                this.Controls.Add(pb);
+                this.Refresh();
+            }
+
+        
         }
 
         private void DigitalImage_Add(DigiImageData data)
@@ -259,10 +286,8 @@ namespace VnaPMSDraw
         {
             DigitalImageConfig digitaldialog = new DigitalImageConfig();
 
-            digitaldialog.ShowDialog();
-            
+            digitaldialog.ShowDialog();            
         }
-
 
         //작업 이미지 불러오기 
         private void loadImageToolStripMenuItem_Click(object sender, EventArgs e)
@@ -442,7 +467,7 @@ namespace VnaPMSDraw
             code.Append("<div class=\"PMS_Image_Item ui-draggable ui-draggable-handle ui-resizable\" link=\"\"");
             code.Append(" style=\"position: absolute; ");
 
-            string position = string.Format("top: {0}px; left: {1}px; z-index: {2}; \">", data.Postion.X, data.Postion.Y, data.zindex);
+            string position = string.Format("top: {0}px; left: {1}px; z-index: {2}; \">", data.Postion.Y, data.Postion.X, data.zindex);
             code.Append(position);
 
             string imagepath = string.Format("<img src=\"/symbols/{0}\" style=\"width:100%;height;100%\">", data.filename);
@@ -489,7 +514,7 @@ namespace VnaPMSDraw
 
             string div = string.Format("</div>");          
             //태그 고유아이디랑 텍스트 사이즈
-            string temp = string.Format("<div id=\"{0}\" class=\"PMS_Tag_Item ui-draggable ui-draggable-handle Text_Small {1}\"", data._id, data.FontSize);
+            string temp = string.Format("<div id=\"{0}\" class=\"PMS_Tag_Item ui-draggable ui-draggable-handle Text_Small {1}\"", data.UniqueTag, data.FontSize);
             code.Append(temp);
 
             //태그 주소값이랑 소수점 자리수 
@@ -498,7 +523,7 @@ namespace VnaPMSDraw
 
             //색상 
             temp = string.Format(" d=\"#{0}\" hh=\"#{1}\" h=\"#{2}\" l=\"#{3}\" ll=\"#{4}\" style=\"position: absolute; top: {5}px; left: {6}px; color: rgb(255, 255, 255);\"",
-                data.FontColor, data.HHColor, data.HColor, data.LColor, data.LLColor, data.Postion.X, data.Postion.Y);
+                data.FontColor, data.HHColor, data.HColor, data.LColor, data.LLColor, data.Postion.Y, data.Postion.X);
             code.Append(temp);
 
             //인덱스랑 view에 쓸 내용
@@ -510,7 +535,6 @@ namespace VnaPMSDraw
             writer.Flush();
             writer.Close();
         }
-
         #endregion
 
 
@@ -536,7 +560,12 @@ namespace VnaPMSDraw
                     return "";
                 }
             }
+            
             string srcFile = string.Format("{0}{1}.txt", localpath, PageName);
+            if(File.Exists(srcFile))
+            {
+                File.Delete(srcFile);
+            }
             System.IO.FileInfo info = new System.IO.FileInfo(srcFile);
             System.IO.StreamWriter writer = File.Exists(srcFile) ? info.AppendText() : info.CreateText();      
             
@@ -571,6 +600,17 @@ namespace VnaPMSDraw
             else File.WriteAllText(jsonfilename, jsontext);
         }
         #endregion
+
+
+        private Color GetColorFromHex(string hexString)
+        {
+            hexString = hexString.Replace("#", string.Empty);
+            byte r = byte.Parse(hexString.Substring(0, 2), NumberStyles.HexNumber);
+            byte g = byte.Parse(hexString.Substring(2, 2), NumberStyles.HexNumber);
+            byte b = byte.Parse(hexString.Substring(4, 2), NumberStyles.HexNumber);
+
+            return Color.FromArgb(byte.Parse("255"), r, g, b);
+        }
     }
 }
 

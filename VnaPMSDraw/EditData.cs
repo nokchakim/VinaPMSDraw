@@ -9,7 +9,7 @@ namespace VnaPMSDraw
 {
     public class AnaTextData
     {
-        public string _id;
+        public string UniqueTag;
         public string FontSize;
         public string FontWeight;
         public string Tag;
@@ -22,7 +22,7 @@ namespace VnaPMSDraw
         public string LColor;
         public string LLColor;
 
-        public string UniqueTag;
+
         public Point Postion;
         public int height;
         public int weight;
@@ -70,10 +70,10 @@ namespace VnaPMSDraw
         public Point Postion;
         public int zindex;
         public int height;
-        public int weight;
+        public int width;
         public string tag;
         public string filename;
-        public int sizeRatio;
+        
 
         public string GetData()
         {

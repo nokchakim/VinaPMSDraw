@@ -47,6 +47,8 @@
             this.lab_H = new System.Windows.Forms.Label();
             this.lab_LL = new System.Windows.Forms.Label();
             this.lab_L = new System.Windows.Forms.Label();
+            this.combo_float = new System.Windows.Forms.ComboBox();
+            this.label10 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // combo_FontSIze
@@ -163,7 +165,7 @@
             this.label6.Font = new System.Drawing.Font("굴림", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.label6.Location = new System.Drawing.Point(246, 145);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(50, 30);
+            this.label6.Size = new System.Drawing.Size(40, 24);
             this.label6.TabIndex = 11;
             this.label6.Text = "HH";
             // 
@@ -173,7 +175,7 @@
             this.label7.Font = new System.Drawing.Font("굴림", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.label7.Location = new System.Drawing.Point(246, 186);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(31, 30);
+            this.label7.Size = new System.Drawing.Size(25, 24);
             this.label7.TabIndex = 12;
             this.label7.Text = "H";
             // 
@@ -183,7 +185,7 @@
             this.label8.Font = new System.Drawing.Font("굴림", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.label8.Location = new System.Drawing.Point(361, 186);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(29, 30);
+            this.label8.Size = new System.Drawing.Size(23, 24);
             this.label8.TabIndex = 14;
             this.label8.Text = "L";
             // 
@@ -193,7 +195,7 @@
             this.label9.Font = new System.Drawing.Font("굴림", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.label9.Location = new System.Drawing.Point(361, 145);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(45, 30);
+            this.label9.Size = new System.Drawing.Size(36, 24);
             this.label9.TabIndex = 13;
             this.label9.Text = "LL";
             // 
@@ -249,11 +251,32 @@
             this.lab_L.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lab_L.Click += new System.EventHandler(this.lab_L_Click);
             // 
+            // combo_float
+            // 
+            this.combo_float.Font = new System.Drawing.Font("굴림", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.combo_float.FormattingEnabled = true;
+            this.combo_float.Location = new System.Drawing.Point(339, 241);
+            this.combo_float.Name = "combo_float";
+            this.combo_float.Size = new System.Drawing.Size(112, 31);
+            this.combo_float.TabIndex = 19;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("굴림", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label10.Location = new System.Drawing.Point(247, 244);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(82, 24);
+            this.label10.TabIndex = 20;
+            this.label10.Text = "소수점";
+            // 
             // ALTextConfig
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(609, 313);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.combo_float);
             this.Controls.Add(this.lab_L);
             this.Controls.Add(this.lab_LL);
             this.Controls.Add(this.lab_H);
@@ -301,5 +324,7 @@
         private System.Windows.Forms.Label lab_H;
         private System.Windows.Forms.Label lab_LL;
         private System.Windows.Forms.Label lab_L;
+        private System.Windows.Forms.ComboBox combo_float;
+        private System.Windows.Forms.Label label10;
     }
 }

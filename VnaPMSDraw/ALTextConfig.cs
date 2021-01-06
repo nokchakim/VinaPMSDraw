@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Globalization;
 
 
 namespace VnaPMSDraw
@@ -36,6 +37,13 @@ namespace VnaPMSDraw
             combo_Zindex.Items.Add("2");
             combo_Zindex.Items.Add("1");
             combo_Zindex.SelectedIndex = 0;
+                        
+            combo_float.Items.Add("0");
+            combo_float.Items.Add("0.0");
+            combo_float.Items.Add("0.00");
+            combo_float.Items.Add("0.000");
+            combo_float.Items.Add("0.0000");
+            combo_float.SelectedIndex = 0;
 
             text_TAG.Text = "";
         }
@@ -89,6 +97,7 @@ namespace VnaPMSDraw
             AnaTextData temp = new AnaTextData();
             temp.Tag = string.Format("{0}", text_TAG.Text);
             temp.FontColor = string.Format("{0:X2}{1:X2}{2:X2}", lab_Color.BackColor.R, lab_Color.BackColor.G, lab_Color.BackColor.B);
+
             temp.HHColor = string.Format("{0:X2}{1:X2}{2:X2}", lab_HH.BackColor.R, lab_HH.BackColor.G, lab_HH.BackColor.B);
             temp.HColor = string.Format("{0:X2}{1:X2}{2:X2}", lab_H.BackColor.R, lab_H.BackColor.G, lab_H.BackColor.B);
             temp.LLColor = string.Format("{0:X2}{1:X2}{2:X2}", lab_LL.BackColor.R, lab_LL.BackColor.G, lab_LL.BackColor.B);
@@ -98,18 +107,32 @@ namespace VnaPMSDraw
             temp.FontWeight = string.Format(combo_FontBold.SelectedItem.ToString());
             temp.Zindex = combo_Zindex.SelectedIndex;
             temp.UniqueTag = ctrl.Tag.ToString();
-            temp.Postion = ctrl.PointToClient(ctrl.Location);
+            temp.Postion = ctrl.Location;
             temp.height = ctrl.Size.Height;
             temp.weight = ctrl.Size.Width;
-            temp._id = ctrl.Tag.ToString();
-
+            temp.Float = (string)combo_float.SelectedItem;
+    
             return temp;
         }
 
-        public void SetDialog(TextBox text)
+        public void SetDialog(TextBox text, bool resetflag = false)
         {
             text_TAG.Text = text.Text;
-            lab_Color.BackColor = text.ForeColor;            
+            lab_Color.BackColor = text.ForeColor;     
+        }
+
+        public void SetDialog(AnaTextData data, bool resetflag = false)
+        {
+            text_TAG.Text = data.Tag;
+            lab_Color.BackColor = GetColorFromHex(data.FontColor);
+            lab_H.BackColor = GetColorFromHex(data.HColor);
+            lab_HH.BackColor = GetColorFromHex(data.HHColor);
+            lab_L.BackColor = GetColorFromHex(data.LColor);
+            lab_LL.BackColor = GetColorFromHex(data.LLColor);
+
+            if (0 > data.Float.Length - 2) combo_float.SelectedIndex = 0;
+            else combo_float.SelectedIndex = data.Float.Length - 2;
+            
         }
 
         private void lab_HH_Click(object sender, EventArgs e)
@@ -150,6 +173,16 @@ namespace VnaPMSDraw
                 lab_L.BackColor = cd.Color;
                 //
             }
+        }
+
+        private Color GetColorFromHex(string hexString)
+        {
+            hexString = hexString.Replace("#", string.Empty);
+            byte r = byte.Parse(hexString.Substring(0, 2), NumberStyles.HexNumber);
+            byte g = byte.Parse(hexString.Substring(2, 2), NumberStyles.HexNumber);
+            byte b = byte.Parse(hexString.Substring(4, 2), NumberStyles.HexNumber);
+
+            return Color.FromArgb(byte.Parse("255"), r, g, b);
         }
     }
 }
