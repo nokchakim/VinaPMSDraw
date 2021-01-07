@@ -218,35 +218,47 @@ namespace ControlManager
         #region 더블클릭으로 viewConfig 진행 
         private static void ViewConfig(Control control, MouseEventArgs e)
         {                        
-            string typeName = control.GetType().Name;       
-         
-           
+            string typeName = control.GetType().Name;
+          
+
             if (typeName == "PictureBox")
             {
                 if("Digital" == control.Name)
                 {
+                    DigiImageData setimage = new DigiImageData();
+                    DataStructALL DataContainer = DataStructALL.Instance();
                     DigitalImageConfig diform = new DigitalImageConfig();
                     PictureBox pb = (PictureBox)control;
+                    bool resetflag = false;
 
+                    if (pb.Tag.ToString() != "")
+                    {
+                        resetflag = true;
+                        List<DigiImageData> didata = DataContainer.Info_DigiImageData();
+                        string temp = control.Tag.ToString();
 
-                    //data 리스트에 구별자를 넣고  tag가 있다
-                    //컨트롤 구별자랑 foreach로 다 찾아가면서 
-                    //foreach(DigiImageData data in digiImageData)
-                    //{
-                    //    if(control.Tag.ToString() == data.UniqueTag)
-                    //    {
-
-                    //    }
-                    //}
-                    ////일치하는 class를 넣어준다
-                    ////
-                    //int datacount = 0;
-                    //diform.SetDialog(digiImageData[datacount]);
-
+                        foreach (DigiImageData imagedata in didata)
+                        {
+                            if (imagedata.UniqueTag == temp)
+                            {
+                                diform.SetDialog(imagedata);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //처음 진입하는 컨트롤에 고유 태그를 넣어준다
+                        control.Tag = DateTime.Now.ToString("yyyyMMddHHmmssfff");
+                    }
                     if (diform.ShowDialog() == DialogResult.OK)
                     {
-                        DigiImageData setimage = diform.ReturnValue(control);
-                      //  digiImageData.Add(setimage);
+                        setimage = diform.ReturnValue(control);
+                        //새로 이미지를 생성했으면 add로 기존 이미지 다시 누른거면 modi로 가서 수정으로
+                        if (true == resetflag) DataContainer.Modi_DigiImageData(setimage);
+                        else
+                        {
+                            DataContainer.Add_DigiImageData(setimage);
+                        }
                     }
                 }    
                 else if ("static" == control.Name)
@@ -263,8 +275,7 @@ namespace ControlManager
                         setimage.width = pb.Width;
                         setimage.height = pb.Height;
 
-                        pb.BackColor = Color.Transparent;     
-                        
+                        pb.BackColor = Color.Transparent;                             
 
                         //기존 control 에 tag로 data 작성을 표기 함
                         //데이터 구조체 tag에도 작성을 표기 함
@@ -324,7 +335,7 @@ namespace ControlManager
                 }
                 else
                 {
-
+                    control.Tag = DateTime.Now.ToString("yyyyMMddHHmmssfff");
                 }
 
                 if (alform.ShowDialog() == DialogResult.OK)
@@ -345,7 +356,7 @@ namespace ControlManager
                     control.Refresh();
 
 
-                    if (false == resetflag) DataContainer.Modi_AnaTextData(settext);
+                    if (true == resetflag) DataContainer.Modi_AnaTextData(settext);
                     else
                     {
                         settext.UniqueTag = DateTime.Now.ToString("yyyyMMddHHmmssfff");

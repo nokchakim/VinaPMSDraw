@@ -30,7 +30,13 @@ namespace VnaPMSDraw
         {
             string filepath = string.Empty;
             OpenFileDialog dialog = new OpenFileDialog();
-            dialog.InitialDirectory = @"D:\";
+
+            string localpath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            localpath = string.Format(localpath + ("\\"));
+            localpath = string.Format(localpath + "VINA PMS DRAW");
+            localpath = string.Format(localpath + ("\\IMAGE\\BG IMAGE\\symbols\\"));
+
+            dialog.InitialDirectory = localpath;
 
             if (dialog.ShowDialog() == DialogResult.OK)
             {
@@ -62,6 +68,11 @@ namespace VnaPMSDraw
             if (text_Value2.Text != "")     temp.value[1] = Convert.ToInt16(text_Value2.Text);
             if (text_Value3.Text != "")     temp.value[2] = Convert.ToInt16(text_Value3.Text);
             if (text_Value4.Text != "")     temp.value[3] = Convert.ToInt16(text_Value4.Text);
+            if (text_Value5.Text != "")     temp.value[4] = Convert.ToInt16(text_Value5.Text);
+            if (text_Value6.Text != "")     temp.value[5] = Convert.ToInt16(text_Value6.Text);
+            if (text_Value7.Text != "")     temp.value[6] = Convert.ToInt16(text_Value7.Text);
+            if (text_Value8.Text != "")     temp.value[7] = Convert.ToInt16(text_Value8.Text);
+
 
             if (text_BaseImage_Path.Text != "")     temp.basepath = text_BaseImage_Path.Text;
 
@@ -69,15 +80,18 @@ namespace VnaPMSDraw
             if (text_Value2_Path.Text != "")    temp.path[1] = text_Value2_Path.Text;
             if (text_Value3_Path.Text != "")    temp.path[2] = text_Value3_Path.Text;            
             if (text_Value4_Path.Text != "")    temp.path[3] = text_Value4_Path.Text;
-
+            if (text_Value5_Path.Text != "")    temp.path[4] = text_Value5_Path.Text;
+            if (text_Value6_Path.Text != "")    temp.path[5] = text_Value6_Path.Text;
+            if (text_Value7_Path.Text != "")    temp.path[6] = text_Value7_Path.Text;
+            if (text_Value8_Path.Text != "")    temp.path[7] = text_Value8_Path.Text;
+                                                
             //tag데이터가 아니라 구분자를 tag라고 하드라 VS에서
             temp.UniqueTag = ctrl.Tag.ToString();
-            temp.Postion = ctrl.PointToClient(ctrl.Location);
+            temp.Postion = ctrl.Location;
             temp.height = ctrl.Size.Height;
             temp.weight = ctrl.Size.Width;
 
-            if (text_TAG_Dig.Text != "") temp.Tag = text_TAG_Dig.Text;
-            
+            if (text_TAG_Dig.Text != "") temp.tag = text_TAG_Dig.Text;            
 
             return temp;
         }
@@ -89,6 +103,12 @@ namespace VnaPMSDraw
             if (data.value[1] > 0) text_Value2.Text = data.value[1].ToString();
             if (data.value[2] > 0) text_Value3.Text = data.value[2].ToString();
             if (data.value[3] > 0) text_Value4.Text = data.value[3].ToString();
+            if (data.value[4] > 0) text_Value4.Text = data.value[4].ToString();
+            if (data.value[5] > 0) text_Value4.Text = data.value[5].ToString();
+            if (data.value[6] > 0) text_Value4.Text = data.value[6].ToString();
+            if (data.value[7] > 0) text_Value4.Text = data.value[7].ToString();
+            
+
 
             if (data.basepath != "") text_BaseImage_Path.Text = data.basepath;
 
@@ -96,9 +116,13 @@ namespace VnaPMSDraw
             if (data.path[1] != "") text_Value2_Path.Text = data.path[1];
             if (data.path[2] != "") text_Value3_Path.Text = data.path[2];
             if (data.path[3] != "") text_Value4_Path.Text = data.path[3];
+            if (data.path[4] != "") text_Value2_Path.Text = data.path[4];
+            if (data.path[5] != "") text_Value3_Path.Text = data.path[5];
+            if (data.path[6] != "") text_Value4_Path.Text = data.path[6];
+            if (data.path[7] != "") text_Value4_Path.Text = data.path[7];
 
-            if (data.Tag != "") text_TAG_Dig.Text = data.Tag;
 
+            if (data.tag != "") text_TAG_Dig.Text = data.tag;
         }
     }
 }

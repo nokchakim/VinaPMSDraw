@@ -209,8 +209,8 @@ namespace VnaPMSDraw
             tb.Top = ClickMousePoint.Y;
             tb.ForeColor = Color.White;
             tb.BackColor = Color.Black;
-//tb.BackColor = Color.FromArgb(0, 0, 0, 0); 텍스트박스는 투명해지지 않는다!
-            tb.Tag = DateTime.Now.ToString("yyyyMMddHHmmssfff");
+            //tb.BackColor = Color.FromArgb(0, 0, 0, 0); 텍스트박스는 투명해지지 않는다!
+            tb.Tag = "";
 
             ControlMoverOrResizer.Init(tb);
             this.Controls.Add(tb);
@@ -258,9 +258,9 @@ namespace VnaPMSDraw
                 pb.Image = new Bitmap(strtemp);
                 pb.SizeMode = PictureBoxSizeMode.StretchImage;
                 pb.Left = ClickMousePoint.X;
-                pb.Top = ClickMousePoint.Y;
-                pb.Tag = DateTime.Now.ToString("yyyyMMddHHmmssfff");
+                pb.Top = ClickMousePoint.Y;             
                 pb.BackColor = Color.Transparent;
+                pb.Tag = "";
 
                 ControlMoverOrResizer.Init(pb);
                 this.Controls.Add(pb);
@@ -296,7 +296,13 @@ namespace VnaPMSDraw
 
             OpenFileDialog dialog = new OpenFileDialog();
 
-            dialog.InitialDirectory = @"D:\";
+            string localpath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            localpath = string.Format(localpath + ("\\"));
+            localpath = string.Format(localpath + "VINA PMS DRAW");
+            localpath = string.Format(localpath + ("\\IMAGE\\BG IMAGE\\"));            
+
+
+            dialog.InitialDirectory = localpath;
 
             if (dialog.ShowDialog() == DialogResult.OK)
             {
@@ -334,7 +340,6 @@ namespace VnaPMSDraw
             }
             string jsonstring = JsonConvert.SerializeObject(AnatextData.ToArray(), Formatting.Indented);
             JsonFileSave(("AnalogueText"), jsonstring);
-
 
             //디지털 이미지 데이터 출력
             List<DigiImageData> digiImageData = DataContainer.Info_DigiImageData();
@@ -498,7 +503,58 @@ namespace VnaPMSDraw
 
             StringBuilder code = new StringBuilder();
 
-            string div = string.Format("</div>");            
+            string div = string.Format("</div>");
+
+            //디지탈 이미지 태그 시작
+            string temp = string.Format("<div id=\"{0}\" class=\"PMS_DImage_Item ui-draggable ui-draggable-handle ui-resizable\" ", data.UniqueTag);
+            code.Append(temp);
+
+            temp = string.Format("tag=\"{0}\" style=\"position: absolute; top: {1}px; left: {2}px; z-index: 5; \">", data.tag, data.Postion.Y, data.Postion.X);
+            code.Append(temp);
+
+            temp = string.Format("<img src=\"/symbols/{0}\" ", data.path);
+            code.Append(temp);
+
+            temp = string.Format("val1=\"{0}\" url1=\"/symbols/{1}\" ",data.value[0], data.path[0]);
+            code.Append(temp);
+
+            temp = string.Format("val2=\"{0}\" url2=\"/symbols/{1}\" ", data.value[1], data.path[1]);
+            code.Append(temp);
+
+            temp = string.Format("val3=\"{0}\" url3=\"/symbols/{1}\" ", data.value[2], data.path[2]);
+            code.Append(temp);
+
+            temp = string.Format("val4=\"{0}\" url4=\"/symbols/{1}\" ", data.value[3], data.path[3]);
+            code.Append(temp);
+
+            temp = string.Format("val5=\"{0}\" url5=\"/symbols/{1}\" ", data.value[4], data.path[4]);
+            code.Append(temp);
+
+            temp = string.Format("val6=\"{0}\" url6=\"/symbols/{1}\" ", data.value[5], data.path[5]);
+            code.Append(temp);
+
+            temp = string.Format("val7=\"{0}\" url7=\"/symbols/{1}\" ", data.value[6], data.path[6]);
+            code.Append(temp);
+
+            temp = string.Format("val8=\"{0}\" url8=\"/symbols/{1}\" ", data.value[7], data.path[7]);
+            code.Append(temp);
+
+            temp = string.Format("val9=\"\" url9=\"\" val10=\"\" url10=\"\" val11=\"\" url11=\"\" val12=\"\" url12=\"\" val13=\"\" url13=\"\" val14=\"\" url14=\"\" val15=\"\" url15=\"\" val16=\"\" url16=\"\" ");
+            code.Append(temp);
+
+            temp = string.Format("style=\"width:100%; height:100% \"><div class=\"ui-resizable-handle ui-resizable-e\" style=\"z-index: 90;\">");
+            code.Append(temp);
+            code.Append(div);
+
+            temp = string.Format("<div class=\"ui-resizable-handle ui-resizable-s\" style=\"z-index: 90;\">");
+            code.Append(temp);
+            code.Append(div);
+
+            temp = string.Format("<div class=\"ui-resizable-handle ui-resizable-se ui-icon ui-icon-gripsmall-diagonal-se\" style=\"z-index: 90;\">");
+            code.Append(temp);
+
+            code.Append(div);
+            code.Append(div);
 
             writer.WriteLine(code.ToString());
             writer.Flush();
@@ -530,14 +586,12 @@ namespace VnaPMSDraw
             temp = string.Format(" z-index: 5;\" > {0} </div>", data.Tag);
             code.Append(temp);
 
-
             writer.WriteLine(code.ToString());
             writer.Flush();
             writer.Close();
         }
         #endregion
-
-
+        
         #region HTML 파일로 빼는 구간
         public string MakeHtmlTextFile(string PageName)
         {  

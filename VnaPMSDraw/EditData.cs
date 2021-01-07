@@ -42,7 +42,7 @@ namespace VnaPMSDraw
     public class DigiImageData
     {
 
-        public string Tag;
+        public string tag;
         public string basepath;
         public short[] value = new short[8];
         public string[] path = new string[8];
@@ -51,7 +51,7 @@ namespace VnaPMSDraw
         public int height;
         public int weight;
         public int sizeRatio;
-        public string tag;
+        
         
 
         public string GetData()
